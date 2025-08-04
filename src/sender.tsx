@@ -106,6 +106,7 @@ export interface SenderProps extends React.ComponentProps<"div"> {
   onSend?: (controller: AbortController) => void;
   toolbar?: React.ReactNode;
 }
+
 export function Sender({
   className,
   initialMessage = "",

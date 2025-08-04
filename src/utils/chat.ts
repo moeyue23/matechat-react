@@ -42,6 +42,7 @@ export function useChat(
         setMessages((prevMessages) => [
           ...prevMessages,
           {
+            id: event.id,
             role: "user",
             name: "User",
             content: event.payload.prompt,
@@ -61,6 +62,7 @@ export function useChat(
         setMessages((prevMessages) => [
           ...prevMessages,
           {
+            id: event.id,
             role: "system",
             name: "Error",
             content: event.payload.error,
@@ -87,6 +89,7 @@ export function useChat(
           return [
             ...prev,
             {
+              id: event.id,
               role: "assistant",
               content: event.payload.chunk,
               avatar: {

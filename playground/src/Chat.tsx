@@ -1,5 +1,5 @@
 import { MessageSquarePlus } from "lucide-react";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { BubbleList } from "../../dist/bubble";
 import { Button } from "../../dist/button";
 import { FileUpload } from "../../dist/file-upload";
@@ -17,6 +17,7 @@ import { useMateChat } from "../../dist/utils/core";
 export function Chat() {
   const initialMessages: MessageParam[] = [
     {
+      id: "1",
       role: "user",
       content: "Hello, how are you?",
       avatar: {
@@ -25,6 +26,7 @@ export function Chat() {
       align: "right",
     },
     {
+      id: "2",
       role: "assistant",
       content:
         "I'm doing well, thank you! How can I assist you today? \
@@ -48,10 +50,10 @@ export function Chat() {
     initialMessages,
   );
 
-  const onClear = () => {
+  const onClear = useCallback(() => {
     setPrompt("");
     setMessages([]);
-  };
+  }, [setMessages]);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">

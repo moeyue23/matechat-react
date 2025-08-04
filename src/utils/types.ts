@@ -2,7 +2,7 @@ import type { Emitter } from "nanoevents";
 import type { AvatarProps } from "../bubble";
 
 export interface BaseEvent<T extends string> {
-  id: symbol;
+  id: string;
   type: T;
   payload?: unknown;
   timestamp?: number;
@@ -47,6 +47,7 @@ export type Events = {
 };
 
 export interface MessageParam {
+  id: string;
   role: "user" | "assistant" | "system" | "developer";
   name?: string;
   content: string;

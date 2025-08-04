@@ -252,12 +252,7 @@ export function BubbleList({
   background = "right-solid",
   footer,
   pending,
-  assistant = {
-    avatar: {
-      text: "A",
-    },
-    align: "left",
-  },
+  assistant,
   isPending = true,
   messages,
   threshold = 8,
@@ -324,6 +319,23 @@ export function BubbleList({
     }
   }, [isScrollAtBottom]);
 
+  const handleTouchStart = useCallback(() => {
+    pauseScroll.current = true;
+  }, []);
+
+  const handleTouchEnd = useCallback(() => {
+    if (isScrollAtBottom()) {
+      pauseScroll.current = false;
+      scrollContainer(false);
+    } else {
+      pauseScroll.current = true;
+    }
+  }, [isScrollAtBottom, scrollContainer]);
+
+  const handleTouchMove = useCallback(() => {
+    pauseScroll.current = true;
+  }, []);
+
   return (
     <div
       data-slot="bubble-list"
@@ -332,20 +344,9 @@ export function BubbleList({
       )}
       ref={containerRef}
       onWheel={handleWheel}
-      onTouchStart={() => {
-        pauseScroll.current = true;
-      }}
-      onTouchEnd={() => {
-        if (isScrollAtBottom()) {
-          pauseScroll.current = false;
-          scrollContainer(false);
-        } else {
-          pauseScroll.current = true;
-        }
-      }}
-      onTouchMove={() => {
-        pauseScroll.current = true;
-      }}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+      onTouchMove={handleTouchMove}
       {...props}
     >
       <div
@@ -353,9 +354,9 @@ export function BubbleList({
         className="flex flex-col max-w-full flex-1 gap-4"
         ref={contentRef}
       >
-        {messages.map((message, index) => (
+        {messages.map((message) => (
           <div
-            key={message.content.slice(0, 8) + index.toString()}
+            key={message.id}
             data-slot="bubble-item"
             className={twMerge(
               clsx(
