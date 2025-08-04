@@ -10,7 +10,6 @@ import type { Backend } from "./utils";
 export interface InputCountProps extends React.ComponentProps<"span"> {
   count: number;
   limit: number;
-  className: string;
 }
 
 export function InputCount({
