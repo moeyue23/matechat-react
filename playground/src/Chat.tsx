@@ -1,33 +1,51 @@
 import { MessageSquarePlus } from "lucide-react";
 import { useMemo, useState } from "react";
-import { BubbleList } from "../../dist/bubble";
-import { Button } from "../../dist/button";
-import { FileUpload } from "../../dist/file-upload";
+import { BubbleList } from "@matechat/react/bubble";
+import { Button } from "@matechat/react/button";
+import { FileUpload } from "@matechat/react/file-upload";
 import {
   Prompt,
   PromptDescription,
   Prompts,
   PromptTitle,
-} from "../../dist/prompt";
-import { InputCount, Sender } from "../../dist/sender";
-import type { MessageParam } from "../../dist/utils";
-import { useChat } from "../../dist/utils/chat";
-import { useMateChat } from "../../dist/utils/core";
+} from "@matechat/react/prompt";
+import { InputCount, Sender } from "@matechat/react/sender";
+import type { MessageParam } from "@matechat/react/utils";
+import { useChat } from "@matechat/react/utils/chat";
+import { useMateChat } from "@matechat/react/utils/core";
 
 const initialMessages: MessageParam[] = [
   {
     id: "1",
     role: "user",
-    content: "Hello, how are you?",
+    content: "How to use MateChat React?",
     align: "right",
   },
   {
     id: "2",
     role: "assistant",
-    content:
-      "I'm doing well, thank you! How can I assist you today? \
-        I'm a language model, so I can understand and respond to a wide range of questions and requests. \
-      I can help you with a variety of tasks, such as answering questions, providing information, or helping you with a specific problem.",
+    content: `# Getting Started
+
+## Prerequisites
+
+MateChat React is a React frontend components and helpers library, we recommend that you use React 18 or above.
+
+If you are looking for the Vue MateChat version, please visit [MateChat Vue](https://matechat.gitcode.com/).
+
+## Quick Start
+
+If you wish to try a brand-new MateChat React project, feel free to use the MateChat CLI to create a template project.
+
+\`\`\`bash
+pnpm create matechat@latest
+\`\`\`
+
+## Installation
+
+\`\`\`bash
+pnpm add @matechat/react
+\`\`\`
+      `,
     align: "left",
   },
 ];
@@ -41,7 +59,7 @@ export function Chat() {
     initialMessages,
     {
       throwOnEmptyBackend: true,
-    },
+    }
   );
 
   const footer = useMemo(() => {
