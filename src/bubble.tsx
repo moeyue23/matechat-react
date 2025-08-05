@@ -191,23 +191,18 @@ export function Bubble({
   );
 }
 
-export interface AvatarProps {
+export interface AvatarProps extends React.ComponentProps<"div"> {
   text?: string;
   imageUrl?: string;
 }
 
-export function Avatar({
-  className,
-  text,
-  imageUrl,
-  ...props
-}: React.ComponentProps<"div"> & AvatarProps) {
+export function Avatar({ className, text, imageUrl, ...props }: AvatarProps) {
   return (
     <div
       data-slot="avatar"
       className={twMerge(
         clsx(
-          "flex items-center justify-center w-10 h-10 rounded-full bg-gray-300 dark:bg-gray-800 dark:text-gray-200 text-gray-800",
+          "flex items-center justify-center w-9 h-9 rounded-full bg-gray-300 dark:bg-gray-800 dark:text-gray-200 text-gray-800",
           className,
         ),
       )}

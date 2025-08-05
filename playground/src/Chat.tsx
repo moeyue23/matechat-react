@@ -14,40 +14,34 @@ import type { MessageParam } from "../../dist/utils";
 import { useChat } from "../../dist/utils/chat";
 import { useMateChat } from "../../dist/utils/core";
 
-export function Chat() {
-  const initialMessages: MessageParam[] = [
-    {
-      id: "1",
-      role: "user",
-      content: "Hello, how are you?",
-      avatar: {
-        text: "U",
-      },
-      align: "right",
-    },
-    {
-      id: "2",
-      role: "assistant",
-      content:
-        "I'm doing well, thank you! How can I assist you today? \
+const initialMessages: MessageParam[] = [
+  {
+    id: "1",
+    role: "user",
+    content: "Hello, how are you?",
+    align: "right",
+  },
+  {
+    id: "2",
+    role: "assistant",
+    content:
+      "I'm doing well, thank you! How can I assist you today? \
         I'm a language model, so I can understand and respond to a wide range of questions and requests. \
       I can help you with a variety of tasks, such as answering questions, providing information, or helping you with a specific problem.",
-      avatar: {
-        text: "A",
-      },
-      align: "left",
-    },
-  ];
+    align: "left",
+  },
+];
 
+export function Chat() {
   const [prompt, setPrompt] = useState("");
 
   const { backend } = useMateChat();
-  if (!backend) {
-    throw new Error("Backend is not initialized");
-  }
-  const { messages, input, setMessages, isPending } = useChat(
+  const { messages, input, setMessages, pending } = useChat(
     backend,
     initialMessages,
+    {
+      throwOnEmptyBackend: true,
+    },
   );
 
   const footer = useMemo(() => {
@@ -70,7 +64,7 @@ export function Chat() {
           className="px-4 w-full max-w-full"
           messages={messages}
           background="right-solid"
-          isPending={isPending}
+          isPending={pending}
           footer={footer}
         />
         {messages.length === 0 && (
@@ -91,9 +85,7 @@ export function Chat() {
         )}
         <Sender
           className="w-full"
-          initialMessage={prompt}
           input={input}
-          onMessageChange={setPrompt}
           toolbar={
             <div className="flex flex-row justify-between w-full">
               <InputCount count={prompt.length} limit={500} />

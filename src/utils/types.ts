@@ -56,6 +56,7 @@ export interface MessageParam {
 }
 
 export type Awaitable<T> = T | Promise<T>;
+export type Nullable<T> = T | null | undefined;
 
 /**
  * Backend interface for chatbot.
