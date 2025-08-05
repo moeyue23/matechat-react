@@ -9,6 +9,7 @@ export default defineConfig({
     pluginApiDocgen({
       entries: {
         bubble: path.resolve(__dirname, "../src/bubble.tsx"),
+        sender: path.resolve(__dirname, "../src/sender.tsx"),
       },
       apiParseTool: "react-docgen-typescript",
     }),
