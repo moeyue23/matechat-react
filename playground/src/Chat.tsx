@@ -1,5 +1,5 @@
 import { MessageSquarePlus } from "lucide-react";
-import { useCallback, useState } from "react";
+import { useMemo, useState } from "react";
 import { BubbleList } from "../../dist/bubble";
 import { Button } from "../../dist/button";
 import { FileUpload } from "../../dist/file-upload";
@@ -50,9 +50,17 @@ export function Chat() {
     initialMessages,
   );
 
-  const onClear = useCallback(() => {
-    setPrompt("");
-    setMessages([]);
+  const footer = useMemo(() => {
+    const onClear = () => {
+      setPrompt("");
+      setMessages([]);
+    };
+    return (
+      <Button onClick={onClear} variant="default" className="self-center">
+        <MessageSquarePlus size="1.1rem" />
+        Start a new conversation
+      </Button>
+    );
   }, [setMessages]);
 
   return (
@@ -63,12 +71,7 @@ export function Chat() {
           messages={messages}
           background="right-solid"
           isPending={isPending}
-          footer={
-            <Button onClick={onClear} variant="default" className="self-center">
-              <MessageSquarePlus size="1.1rem" />
-              Start a new conversation
-            </Button>
-          }
+          footer={footer}
         />
         {messages.length === 0 && (
           <Prompts>

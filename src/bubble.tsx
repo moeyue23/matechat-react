@@ -3,7 +3,7 @@ import "./tailwind.css";
 
 import clsx from "clsx";
 import type React from "react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 import Markdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import {
@@ -247,7 +247,7 @@ export interface BubbleListProps extends React.ComponentProps<"div"> {
   threshold?: number;
 }
 
-export function BubbleList({
+export const BubbleList = memo(function BubbleList({
   className,
   background = "right-solid",
   footer,
@@ -424,4 +424,4 @@ export function BubbleList({
       )}
     </div>
   );
-}
+});
