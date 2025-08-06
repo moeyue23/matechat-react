@@ -149,11 +149,68 @@ export function Bubble({
         <Markdown
           remarkPlugins={[remarkGfm, remarkMath]}
           components={{
+            h1(props) {
+              const { children, className, node: _node, ...rest } = props;
+              return (
+                <h1
+                  {...rest}
+                  className={clsx("my-3 text-2xl font-bold", className)}
+                >
+                  {children}
+                </h1>
+              );
+            },
+            h2(props) {
+              const { children, className, node: _node, ...rest } = props;
+              return (
+                <h2
+                  {...rest}
+                  className={clsx("my-2 text-xl font-bold", className)}
+                >
+                  {children}
+                </h2>
+              );
+            },
+            h3(props) {
+              const { children, className, node: _node, ...rest } = props;
+              return (
+                <h3
+                  {...rest}
+                  className={clsx("my-1 text-lg font-bold", className)}
+                >
+                  {children}
+                </h3>
+              );
+            },
             code(props) {
               const { children, className, ref: _ref, ...rest } = props;
               const match = /language-(\w+)/.exec(className || "");
+
+              const [copied, setCopied] = useState(false);
+              const handleCopy = () => {
+                navigator.clipboard.writeText(String(children).replace(/\n$/, ''));
+                setCopied(true);
+                setTimeout(() => setCopied(false), 2000);
+              };
+
               return match ? (
-                <div className="w-full overflow-x-auto border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 rounded-lg">
+                <div
+                  className={clsx(
+                    "w-full overflow-x-auto rounded-lg",
+                    "bg-gray-50 dark:bg-gray-800",
+                  )}
+                >
+                  <div className="inline-flex w-full justify-between bg-gray-100 p-2">
+                    <div className="px-2 py-1 text-xs text-gray-900 dark:text-gray-400">
+                      {match[1]}
+                    </div>
+                    <div
+                      className="px-2 py-1 text-xs text-gray-900 dark:text-gray-400 cursor-pointer"
+                      onClick={handleCopy}
+                    >
+                      {copied ? "Copied" : "Copy"}
+                    </div>
+                  </div>
                   <SyntaxHighlighter
                     {...rest}
                     PreTag="div"
@@ -177,9 +234,43 @@ export function Bubble({
                   </SyntaxHighlighter>
                 </div>
               ) : (
-                <code {...rest} className={className}>
+                <code
+                  {...rest}
+                  className={clsx(
+                    "rounded-md px-1 py-0.5 text-[85%]",
+                    "bg-gray-100 dark:bg-gray-800",
+                  )}
+                >
                   {children}
                 </code>
+              );
+            },
+            blockquote(props) {
+              const { children, className, ...rest } = props;
+              return (
+                <blockquote
+                  {...rest}
+                  className={clsx(
+                    "border-l-4 border-gray-300 pl-4 italic",
+                    className,
+                  )}
+                >
+                  {children}
+                </blockquote>
+              );
+            },
+            a(props) {
+              const { children, className, ref: _ref, ...rest } = props;
+              return (
+                <a
+                  {...rest}
+                  className={clsx(
+                    "text-blue-600 dark:text-blue-400 hover:underline underline-offset-1",
+                    className,
+                  )}
+                >
+                  {children}
+                </a>
               );
             },
           }}
