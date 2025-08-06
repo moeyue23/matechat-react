@@ -1,5 +1,3 @@
-import { MessageSquarePlus } from "lucide-react";
-import { useMemo, useState } from "react";
 import { BubbleList } from "@matechat/react/bubble";
 import { Button } from "@matechat/react/button";
 import { FileUpload } from "@matechat/react/file-upload";
@@ -13,6 +11,8 @@ import { InputCount, Sender } from "@matechat/react/sender";
 import type { MessageParam } from "@matechat/react/utils";
 import { useChat } from "@matechat/react/utils/chat";
 import { useMateChat } from "@matechat/react/utils/core";
+import { MessageSquarePlus } from "lucide-react";
+import { useMemo, useState } from "react";
 
 const initialMessages: MessageParam[] = [
   {
@@ -28,7 +28,7 @@ const initialMessages: MessageParam[] = [
 
 ## Prerequisites
 
-MateChat React is a React frontend components and helpers library, we recommend that you use React 18 or above.
+> MateChat React is a React frontend components and helpers library, we recommend that you use React 18 or above.
 
 If you are looking for the Vue MateChat version, please visit [MateChat Vue](https://matechat.gitcode.com/).
 
@@ -59,7 +59,7 @@ export function Chat() {
     initialMessages,
     {
       throwOnEmptyBackend: true,
-    }
+    },
   );
 
   const footer = useMemo(() => {

@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { Button } from "../../dist/button";
-import { createOpenAIBackend } from "../../dist/utils/backend";
-import { agent } from "../../dist/utils/core";
+import { Button } from "@matechat/react/button";
+import { createOpenAIBackend } from "@matechat/react/utils/backend";
+import { agent } from "@matechat/react/utils/core";
 
-export function Activate({ onActivate }) {
+export function Activate({ onActivate }: { onActivate: () => void }) {
   const [token, setToken] = useState("");
 
   const activateChat = () => {

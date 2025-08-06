@@ -1,6 +1,6 @@
+import path from "node:path";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react-swc";
-import path from "node:path";
 import { createLogger, defineConfig } from "vite";
 
 // Suppress warnings from Rolldown Vite
@@ -13,7 +13,7 @@ export default defineConfig({
   customLogger: logger,
   resolve: {
     alias: {
-      '@matechat/react': path.resolve(__dirname, "../src"),
-    }
-  }
+      "@matechat/react": path.resolve(__dirname, "../src"),
+    },
+  },
 });
