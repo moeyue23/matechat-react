@@ -1,7 +1,7 @@
-import { useState } from "react";
 import { Button } from "@matechat/react/button";
 import { createOpenAIBackend } from "@matechat/react/utils/backend";
 import { agent } from "@matechat/react/utils/core";
+import { useState } from "react";
 
 export function Activate({ onActivate }: { onActivate: () => void }) {
   const [token, setToken] = useState("");
