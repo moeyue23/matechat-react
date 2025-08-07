@@ -6,11 +6,13 @@ import { twMerge } from "tailwind-merge";
 import PublishNew from "./icons/publish-new.svg";
 import QuickStop from "./icons/quick-stop.svg";
 import type { Backend } from "./utils";
+import { commandItems, serviceMentions } from "./utils/mentionItems";
+import { List } from "./list";
+import type { SelectOption } from "./list";
 
 export interface InputCountProps extends React.ComponentProps<"span"> {
   count: number;
   limit: number;
-  className: string;
 }
 
 export function InputCount({
@@ -65,7 +67,7 @@ export function SenderButton({
     >
       {icon ?? (
         <img
-          className="filter brightness-0 invert"
+          className="filter !brightness-0 invert"
           src={isSending ? QuickStop : PublishNew}
           alt={isSending ? "icon-quick-stop" : "icon-publish-new"}
         />
@@ -107,6 +109,7 @@ export interface SenderProps extends React.ComponentProps<"div"> {
   onSend?: (controller: AbortController) => void;
   toolbar?: React.ReactNode;
 }
+
 export function Sender({
   className,
   initialMessage = "",
@@ -120,7 +123,49 @@ export function Sender({
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [message, setMessage] = useState(initialMessage);
   const [isSending, setIsSending] = useState(false);
+  const [showCommandList, setShowCommandList] = useState(false);
+  const [showMentionList, setShowMentionList] = useState(false);
+  const renderList = (
+    show: boolean,
+    options: SelectOption[],
+    onSelected: (value: string) => void
+  ) => {
+    if (!show) return null;
 
+    return (
+      <List
+        onMouseDown={(e) => e.preventDefault()}
+        className="absolute z-10 w-full max-h-60 overflow-y-auto bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg"
+        value={options.length > 0 ? options[0]?.value : undefined}
+        options={options}
+        onSelected={(value) => {
+          const textarea = textareaRef.current!;
+          const cursorPos = textarea.selectionStart;
+
+          const text = textarea.value;
+          const before = text.slice(0, cursorPos);
+          const after = text.slice(cursorPos);
+
+          const triggerIndex = Math.max(before.lastIndexOf('/'), before.lastIndexOf('@'));
+
+          if (triggerIndex === -1) return;
+
+          const triggerChar = before[triggerIndex];
+
+          const newText =
+            before.slice(0, triggerIndex) + triggerChar + value + ' ' + after;
+
+          textarea.value = newText;
+          textarea.selectionStart = textarea.selectionEnd = triggerIndex + value.length + 2;
+          textarea.focus();
+          setMessage(newText);
+
+          onSelected(value);
+        }
+        }
+      />
+    );
+  };
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
@@ -157,12 +202,36 @@ export function Sender({
   }, [isSending, message, onSend, controller, input]);
   const handleKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-      if (event.key === "Enter" && !event.shiftKey) {
+      if (
+        event.key === "Enter" &&
+        !event.shiftKey &&
+        !event.nativeEvent.isComposing
+      ) {
         event.preventDefault();
         handleSend();
       }
     },
     [handleSend],
+  );
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      const value = e.target.value;
+      setMessage(value);
+
+      const lastChar = value.length > 0 ? value[value.length - 1] : "";
+
+      if (lastChar === "/") {
+        setShowCommandList(true);
+        setShowMentionList(false);
+      } else if (lastChar === "@") {
+        setShowMentionList(true);
+        setShowCommandList(false);
+      } else {
+        setShowCommandList(false);
+        setShowMentionList(false);
+      }
+    },
+    []
   );
 
   return (
@@ -170,7 +239,7 @@ export function Sender({
       data-slot="sender"
       className={twMerge(
         clsx(
-          "flex flex-col items-center border border-gray-200 rounded-2xl shadow-sm transition-all duration-300 hover:shadow-md focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500",
+          "flex flex-col items-center border border-gray-200 dark:border-gray-700 rounded-2xl shadow-sm transition-all duration-300 hover:shadow-md focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500",
           className,
         ),
       )}
@@ -179,10 +248,10 @@ export function Sender({
       <textarea
         ref={textareaRef}
         value={message}
-        onChange={(e) => setMessage(e.target.value)}
+        onChange={handleChange}
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
-        className="w-full pt-4 px-4 border-0 rounded-2xl resize-none focus:ring-0 focus:outline-none text-gray-700 placeholder-gray-400"
+        className="w-full pt-4 px-4 border-0 rounded-2xl !resize-none focus:ring-0 focus:outline-none text-gray-700 placeholder-gray-400"
         rows={2}
       />
       <div className="flex items-center w-full px-4 py-2 gap-4">
@@ -193,6 +262,8 @@ export function Sender({
           className="ml-auto"
         />
       </div>
+      {renderList(showCommandList, commandItems, () => setShowCommandList(false))}
+      {renderList(showMentionList, serviceMentions, () => setShowMentionList(false))}
     </div>
   );
 }

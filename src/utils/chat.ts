@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import type { InputOptions } from "./backend";
 import type { Backend, Events, EventTypes, MessageParam } from "./types";
 
 export function useChat(
   backend: Backend,
-  initialMessages: MessageParam[] = [],
+  initialMessages: MessageParam[] = []
 ): {
   messages: MessageParam[];
   input: (prompt: string, options?: InputOptions) => Promise<void>;
@@ -23,17 +23,17 @@ export function useChat(
         ...options,
       });
     },
-    [backend, messages],
+    [backend, messages]
   );
 
   const on = useCallback(
     <K extends EventTypes["type"]>(
       type: K,
-      handler: Events[K],
+      handler: Events[K]
     ): (() => void) => {
       return backend.on(type, handler);
     },
-    [backend],
+    [backend]
   );
 
   useEffect(() => {
@@ -73,7 +73,7 @@ export function useChat(
       }),
       backend.on("chunk", (event) => {
         setIsPending(false);
-        setMessages((prev) => {
+        setMessages((prev: MessageParam[]) => {
           const lastMessage = prev[prev.length - 1];
           if (lastMessage && lastMessage.role === "assistant") {
             return [
