@@ -5,15 +5,18 @@
     ".changes/add-list-component.md",
     ".changes/background-option.md",
     ".changes/bubble-patch.md",
+    ".changes/bubble-perf.md",
     ".changes/chore-deps.md",
     ".changes/file-upload.md",
     ".changes/fix-prompt.md",
     ".changes/fix-sender-lint.md",
     ".changes/fix-utils-build.md",
+    ".changes/memo-bubble-list.md",
     ".changes/optimize-callback.md",
     ".changes/optimize-sender-button.md",
     ".changes/optimize-sender-input.md",
     ".changes/optimize-usechat.md",
-    ".changes/refactor-bubble-list.md"
+    ".changes/refactor-bubble-list.md",
+    ".changes/sender-enforce.md"
   ]
 }

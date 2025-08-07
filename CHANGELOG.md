@@ -1,5 +1,23 @@
 # Changelog
 
+## \[0.1.0-beta.3]
+
+### Performance Improvements
+
+- [`b07439f`](https://github.com/DevCloudFE/matechat-react/commit/b07439f90089648ddd2f94d92a72dd818074af02) Default wrap `BubbleList` with `React.memo` to avoid extra rerender.
+
+## \[0.1.0-beta.2]
+
+### Bug Fixes
+
+- [`a11cb5d`](https://github.com/DevCloudFE/matechat-react/commit/a11cb5d57b0cf83ed7cdd07e60c276d75843df95) Enforce some styles for `Sender` component.
+
+## \[0.1.0-beta.1]
+
+### Performance Improvements
+
+- [`57077a8`](https://github.com/DevCloudFE/matechat-react/commit/57077a8439a97bed327668bc6f2be3bb630c2749) Optimize performance of `BubbleList` component, avoid extra rerender overheads.
+
 ## \[0.1.0-beta.0]
 
 ### Refactors
@@ -75,6 +93,7 @@
   - Use `left-solid`, `right-solid`, `transparent` and `solid` as the value of `background` option.
   - Default to use `right-solid` as the value of `background` option in `Bubble` component.
   - Remove `left-only` and `right-only` value in `Bubble` component.
+
 - [`577946c`](https://github.com/DevCloudFE/matechat-react/commit/577946c3300207688c7b9927739b49536e1438a5) Bump dependencies.
 
 ## \[0.1.0-alpha.0]
