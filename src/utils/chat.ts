@@ -68,64 +68,64 @@ export function useChat(
   useEffect(() => {
     const cleanCbs: (() => void)[] = backend
       ? [
-        backend.on("input", (event) => {
-          setPending(true);
-          setMessages((prevMessages) => [
-            ...prevMessages,
-            {
-              id: event.id,
-              role: "user",
-              name: "User",
-              content: event.payload.prompt,
-              align: "right",
-            },
-          ]);
-        }),
-        backend.on("message", (event) => {
-          setMessages((prevMessages) => [...prevMessages, event.payload]);
-        }),
-        backend.on("error", (event) => {
-          setPending(false);
-          console.error("Error from backend:", event.payload.error);
-          setMessages((prevMessages) => [
-            ...prevMessages,
-            {
-              id: event.id,
-              role: "system",
-              name: "Error",
-              content: event.payload.error,
-              align: "center",
-            },
-          ]);
-        }),
-        backend.on("finish", () => {
-          setPending(false);
-        }),
-        backend.on("chunk", (event) => {
-          setPending(false);
-          setMessages((prev) => {
-            const lastMessage = prev[prev.length - 1];
-            if (lastMessage && lastMessage.role === "assistant") {
-              return [
-                ...prev.slice(0, -1),
-                {
-                  ...lastMessage,
-                  content: lastMessage.content + event.payload.chunk,
-                },
-              ];
-            }
-            return [
-              ...prev,
+          backend.on("input", (event) => {
+            setPending(true);
+            setMessages((prevMessages) => [
+              ...prevMessages,
               {
                 id: event.id,
-                role: "assistant",
-                content: event.payload.chunk,
-                align: "left",
+                role: "user",
+                name: "User",
+                content: event.payload.prompt,
+                align: "right",
               },
-            ];
-          });
-        }),
-      ]
+            ]);
+          }),
+          backend.on("message", (event) => {
+            setMessages((prevMessages) => [...prevMessages, event.payload]);
+          }),
+          backend.on("error", (event) => {
+            setPending(false);
+            console.error("Error from backend:", event.payload.error);
+            setMessages((prevMessages) => [
+              ...prevMessages,
+              {
+                id: event.id,
+                role: "system",
+                name: "Error",
+                content: event.payload.error,
+                align: "center",
+              },
+            ]);
+          }),
+          backend.on("finish", () => {
+            setPending(false);
+          }),
+          backend.on("chunk", (event) => {
+            setPending(false);
+            setMessages((prev) => {
+              const lastMessage = prev[prev.length - 1];
+              if (lastMessage && lastMessage.role === "assistant") {
+                return [
+                  ...prev.slice(0, -1),
+                  {
+                    ...lastMessage,
+                    content: lastMessage.content + event.payload.chunk,
+                  },
+                ];
+              }
+              return [
+                ...prev,
+                {
+                  id: event.id,
+                  role: "assistant",
+                  content: event.payload.chunk,
+                  align: "left",
+                },
+              ];
+            });
+          }),
+        ]
       : [];
     return () => {
       for (const cb of cleanCbs) {

@@ -215,6 +215,7 @@ export function Sender({
   );
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      
       const value = e.target.value;
       setMessage(value);
 
