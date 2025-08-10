@@ -3,47 +3,13 @@ import "./tailwind.css";
 
 import clsx from "clsx";
 import type React from "react";
-import { memo, useCallback, useEffect, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useRef } from "react";
 import Markdown from "react-markdown";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import {
-  oneLight,
-  vscDarkPlus,
-} from "react-syntax-highlighter/dist/esm/styles/prism";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import { twMerge } from "tailwind-merge";
-import type { MessageParam } from "./utils";
-
-const useTheme = () => {
-  const [isDark, setDark] = useState(false);
-
-  useEffect(() => {
-    const checkDarkMode = () => {
-      setDark(document.documentElement.classList.contains("dark"));
-    };
-    checkDarkMode();
-
-    const observer = new MutationObserver(checkDarkMode);
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["class"],
-    });
-
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    const handleSystemThemeChange = (event: MediaQueryListEvent) => {
-      setDark(event.matches);
-    };
-    mediaQuery.addEventListener("change", handleSystemThemeChange);
-
-    return () => {
-      observer.disconnect();
-      mediaQuery.removeEventListener("change", handleSystemThemeChange);
-    };
-  }, []);
-
-  return { isDark };
-};
+import type { MessageParam } from "../utils";
+import { BlockQuote, CodeBlock, Heading, Link } from "./markdown";
 
 const bubbleVariants = cva(
   "flex flex-col gap-1 justify-center rounded-lg dark:text-gray-200 text-gray-800 max-w-full overflow-x-auto",
@@ -111,7 +77,6 @@ export function Bubble({
   isPending = false,
   ...props
 }: BubbleProps) {
-  const { isDark } = useTheme();
 
   const defaultPending = (
     <div className="flex items-center space-x-1 py-1">
@@ -149,130 +114,15 @@ export function Bubble({
         <Markdown
           remarkPlugins={[remarkGfm, remarkMath]}
           components={{
-            h1(props) {
-              const { children, className, node: _node, ...rest } = props;
-              return (
-                <h1
-                  {...rest}
-                  className={clsx("my-3 text-2xl font-bold", className)}
-                >
-                  {children}
-                </h1>
-              );
-            },
-            h2(props) {
-              const { children, className, node: _node, ...rest } = props;
-              return (
-                <h2
-                  {...rest}
-                  className={clsx("my-2 text-xl font-bold", className)}
-                >
-                  {children}
-                </h2>
-              );
-            },
-            h3(props) {
-              const { children, className, node: _node, ...rest } = props;
-              return (
-                <h3
-                  {...rest}
-                  className={clsx("my-1 text-lg font-bold", className)}
-                >
-                  {children}
-                </h3>
-              );
-            },
-            code(props) {
-              const { children, className, ref: _ref, ...rest } = props;
-              const match = /language-(\w+)/.exec(className || "");
-
-              const [copied, setCopied] = useState(false);
-              const handleCopy = () => {
-                navigator.clipboard.writeText(String(children).replace(/\n$/, ''));
-                setCopied(true);
-                setTimeout(() => setCopied(false), 2000);
-              };
-
-              return match ? (
-                <div
-                  className={clsx(
-                    "w-full overflow-x-auto rounded-lg",
-                    "bg-gray-50 dark:bg-gray-800",
-                  )}
-                >
-                  <div className="inline-flex w-full justify-between bg-gray-100 p-2">
-                    <div className="px-2 py-1 text-xs text-gray-900 dark:text-gray-400">
-                      {match[1]}
-                    </div>
-                    <div
-                      className="px-2 py-1 text-xs text-gray-900 dark:text-gray-400 cursor-pointer"
-                      onClick={handleCopy}
-                    >
-                      {copied ? "Copied" : "Copy"}
-                    </div>
-                  </div>
-                  <SyntaxHighlighter
-                    {...rest}
-                    PreTag="div"
-                    language={match[1]}
-                    style={isDark ? vscDarkPlus : oneLight}
-                    customStyle={{
-                      background: "transparent",
-                      margin: 0,
-                      padding: "1rem",
-                      borderRadius: "0.5rem",
-                      overflowX: "auto",
-                    }}
-                    codeTagProps={{
-                      style: {
-                        fontFamily: "monospace",
-                        fontSize: "0.875rem",
-                      },
-                    }}
-                  >
-                    {String(children).replace(/\n$/, "")}
-                  </SyntaxHighlighter>
-                </div>
-              ) : (
-                <code
-                  {...rest}
-                  className={clsx(
-                    "rounded-md px-1 py-0.5 text-[85%]",
-                    "bg-gray-100 dark:bg-gray-800",
-                  )}
-                >
-                  {children}
-                </code>
-              );
-            },
-            blockquote(props) {
-              const { children, className, ...rest } = props;
-              return (
-                <blockquote
-                  {...rest}
-                  className={clsx(
-                    "border-l-4 border-gray-300 pl-4 italic",
-                    className,
-                  )}
-                >
-                  {children}
-                </blockquote>
-              );
-            },
-            a(props) {
-              const { children, className, ref: _ref, ...rest } = props;
-              return (
-                <a
-                  {...rest}
-                  className={clsx(
-                    "text-blue-600 dark:text-blue-400 hover:underline underline-offset-1",
-                    className,
-                  )}
-                >
-                  {children}
-                </a>
-              );
-            },
+            a: Link,
+            code: CodeBlock,
+            blockquote: BlockQuote,
+            h1: (props) => <Heading {...props} level={1} />,
+            h2: (props) => <Heading {...props} level={2} />,
+            h3: (props) => <Heading {...props} level={3} />,
+            h4: (props) => <Heading {...props} level={4} />,
+            h5: (props) => <Heading {...props} level={5} />,
+            h6: (props) => <Heading {...props} level={6} />,
           }}
         >
           {text}
