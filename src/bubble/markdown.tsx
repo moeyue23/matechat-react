@@ -1,11 +1,11 @@
 import clsx from "clsx";
 import { useCallback, useState } from "react";
 import SyntaxHighlighter from "react-syntax-highlighter";
-import { useTheme } from "./hooks";
 import {
   oneLight,
   vscDarkPlus,
 } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { useTheme } from "./hooks";
 
 export interface HeadingProps extends React.ComponentProps<"h1"> {
   level: 1 | 2 | 3 | 4 | 5 | 6;
@@ -51,19 +51,20 @@ export function CodeBlock({
     <div
       className={clsx(
         "w-full overflow-x-auto rounded-lg",
-        "bg-gray-50 dark:bg-gray-800"
+        "bg-gray-50 dark:bg-gray-800",
       )}
     >
       <div className="inline-flex w-full justify-between bg-gray-100 p-2">
         <div className="px-2 py-1 text-xs text-gray-900 dark:text-gray-400">
           {match[1]}
         </div>
-        <div
+        <button
+          type="button"
           className="px-2 py-1 text-xs text-gray-900 dark:text-gray-400 cursor-pointer"
           onClick={handleCopy}
         >
           {copied ? "Copied" : "Copy"}
-        </div>
+        </button>
       </div>
       <SyntaxHighlighter
         {...rest}
@@ -92,7 +93,7 @@ export function CodeBlock({
       {...rest}
       className={clsx(
         "rounded-md px-1 py-0.5 text-[85%]",
-        "bg-gray-100 dark:bg-gray-800"
+        "bg-gray-100 dark:bg-gray-800",
       )}
     >
       {children}
@@ -120,7 +121,7 @@ export function Link({ children, className, ...rest }: LinkProps) {
     <a
       className={clsx(
         "text-blue-600 dark:text-blue-400 hover:underline underline-offset-1",
-        className
+        className,
       )}
       target="_blank"
       {...rest}
