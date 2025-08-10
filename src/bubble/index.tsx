@@ -77,7 +77,6 @@ export function Bubble({
   isPending = false,
   ...props
 }: BubbleProps) {
-
   const defaultPending = (
     <div className="flex items-center space-x-1 py-1">
       <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" />
